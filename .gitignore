@@ -1,0 +1,12 @@
+# Ignorar archivos y directorios de configuración local
+/backend/.env
+/frontend/.env
+/backend/venv/
+/frontend/node_modules/
+
+# Ignorar archivos generados automáticamente
+/backend/__pycache__/
+/backend/*.pyc
+/frontend/build/
+/frontend/dist/
+/frontend/.cache/

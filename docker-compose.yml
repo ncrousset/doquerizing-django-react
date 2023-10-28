@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    container_name: nsd_db
+    environment:
+      - POSTGRES_USER=hello_django
+      - POSTGRES_PASSWORD=hello_django
+      - POSTGRES_DB=hello_django_dev
+  backend:
+    build: ./backend
+    command: gunicorn nsd.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./backend/:/usr/src/backend/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./backend/.env
+    container_name: backend_nsd
+    depends_on:
+      - db
+  frontend:
+    build: ./frontend
+    volumes:
+      - frontend:/app/build
+    container_name: frontend_nsd
+  nginx:
+    build: ./nginx
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+      - frontend
+volumes:
+  postgres_data:
+  backend:
+  frontend:
